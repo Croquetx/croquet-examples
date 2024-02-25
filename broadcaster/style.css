@@ -1,0 +1,130 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#all {
+    width: 100%;
+    height: 100%;
+}
+
+#videos {
+    width: 100%;
+    height: calc(100% - 16px - 32px);
+}
+
+#videos[count="2"] {
+    display: grid;
+    grid-template-columns: auto 20% auto;
+    grid-template-rows: 5% 15% 80%;
+}
+
+#videos[count="3"] {
+    display: grid;
+    grid-template-columns: auto 20% auto;
+    grid-template-rows: 5% 15% 80%;
+}
+
+#videos[count="1"] #screen {
+    width: 100%;
+    height: 100%;
+}
+
+#videos[count="2"] #screen {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+#videos[count="3"] #screen {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+#videos[count="2"] .remote-video-1 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+#videos[count="3"] .remote-video-1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+#videos[count="3"] .remote-video-2 {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+#opaqueMask {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 16px - 32px);
+    top: 0px;
+    left: 0px;
+}
+
+.mirror {
+    transform: scaleX(-1);
+}
+
+#control {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    bottom: calc(0px + 16px);
+    left: 0px;
+    width: 100%;
+    background: white;
+    transition: opacity 0.5s;
+}
+
+.holder {
+    display: flex;
+    border-radius: 2px;
+    border: 2px solid black;
+    border-style: rigid;
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+#opacityHolder {
+    display: flex;
+    margin-left: 6px;
+    margin-right: 6px;
+    border: 1px solid gray;
+}
+
+#playButton {
+    border: 1px solid gray;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button {
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.button:hover {
+    background-color: #C0C0C0;
+}
+
+.center-top {
+    position: absolute;
+    top: 0px;
+}

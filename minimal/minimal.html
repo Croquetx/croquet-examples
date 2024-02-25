@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Minimal Croquet</title>
+    </head>
+    <body>
+        <div id="counter">0</div>
+        <script src="q.js"></script>
+        <script>
+            class Minimal extends Q.OModel({counter: 0}) {
+                init() {
+                    this.subscribe("", "reset", () => this.counter = 0);
+                    this.future({every: 1000}, () => this.counter++);
+                }
+            }
+            Minimal.register("Minimal");
+
+            Q.Session.join("minimal", Minimal, Q.OView).then(({ model, view })=> {
+                view.subscribeToPropertyChange(model, "counter", () => counter.innerText = model.counter);
+                window.onclick = () => view.publish("", "reset");
+            });
+        </script>
+    </body>
+</html>

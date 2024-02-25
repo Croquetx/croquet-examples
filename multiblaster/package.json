@@ -1,0 +1,16 @@
+{
+  "name": "@croquet/multiblaster",
+  "version": "1.0.0",
+  "description": "Multiplayer Space Game",
+  "main": "deploy.js",
+  "scripts": {
+    "deploy": "node deploy.js"
+  },
+  "author": "Croquet Corporation",
+  "license": "Apache-2.0",
+  "private": true,
+  "dependencies": {
+    "fs-extra": "^10.0.0",
+    "simple-git": "^2.47.0"
+  }
+}

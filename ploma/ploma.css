@@ -1,0 +1,222 @@
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+html, body, #ploma {
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+canvas#canvas {
+    transform-origin: 0 0;
+}
+
+.postview {
+    transform: scale(0.5);
+}
+ 
+.doButton {
+    height: 36px;
+    width: 36px;
+    font-family: sans-serif;
+    font-size: 24px;
+    background: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    border-radius: 2px;
+    line-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.colorPicker {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 120px;
+    height: 120px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    overflow: hidden;
+}
+
+.colorPicker[postview="true"] {
+    transform: scale(0.3);
+    transform-origin: 0 0;
+}
+
+.color-palette {
+    display: flex;
+    flex-wrap: wrap;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    background-color: #CDCDCD;
+}
+
+.nibs-palette {
+    display: flex;
+    flex-grow: 1;
+    margin-top: 8px;
+    background-color: #CDCDCD;
+    justify-content: center;
+    align-items: center;
+}
+
+.picker-hidden {
+    height: 32px;
+    justify-content: flex-start;
+    transition: height 0.25s;
+}
+
+.picker-hidden > .color-palette {
+    height: 0px;
+}
+
+
+.picker-hidden > .nibs-palette {
+    display: none;
+}
+
+.swatch {
+    width: 24px;
+    height: 24px;
+    margin: 2px;
+    border: 1px solid gray;
+    border-radius: 50%;
+}
+
+.swatch-pen {
+    border-radius: 50%;
+    border: 1px solid gray;
+
+}
+
+.nib-holder {
+    border: 0px;
+    display: flex;
+    align-items: center;
+    margin-left: 6px;
+    margin-right: 6px;
+    justify-content: center;
+}
+
+.selected {
+   box-shadow: 0 3px 6px 0 rgba(0,0,0,0.3), 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.button-list {
+    display: flex;
+    margin-bottom: 8px;
+    align-items: center;
+    background-color: white;
+    height: 36px;
+}
+
+.undoIcon {
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='24px' height='24px' viewBox='0 0 24 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Ctitle%3Eicon/material/undo@3x%3C/title%3E%3Cg id='icon/material/undo' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg id='ic-baseline-undo'%3E%3Cg id='Icon' fill='%2300232E'%3E%3Cpath d='M12.5,8 C9.85,8 7.45,8.99 5.6,10.6 L2,7 L2,16 L11,16 L7.38,12.38 C8.77,11.22 10.54,10.5 12.5,10.5 C16.04,10.5 19.05,12.81 20.1,16 L22.47,15.22 C21.08,11.03 17.15,8 12.5,8 Z' id='Icon-Path'%3E%3C/path%3E%3C/g%3E%3Crect id='ViewBox' fill-rule='nonzero' x='0' y='0' width='24' height='24'%3E%3C/rect%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    width: 24px;
+    height: 24px;
+}
+
+.all {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: fit-content;
+    font-family: sans-serif;
+}
+
+.banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 8px;
+}
+
+.title-line {
+    display: flex;
+    margin-left: 8px;
+    margin-right: 8px;
+    align-items: center;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    width: fit-content;
+}
+
+.explanation {
+    margin-left: auto;
+    margin-bottom: 8px;
+    width: 80%;
+    border: 1px solid #888;
+    border-radius: 4px;
+}
+
+.subtitle {
+    margin-top: 4px;
+    margin-left: 16px;
+}
+
+.github-badge {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    z-index: 4;
+}
+
+#logger {
+    position: absolute;
+    height: 100px;
+    width: 100%;
+    bottom: 0px;
+    left: 0px;
+    background-color: white;
+    overflow: scroll;
+}
+
+#croquet-root {
+    flex-grow: 1;
+}
+
+.qr {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    width: 100px;
+    height: 100px;
+}
+
+@media (max-width: 450px) {
+    .title {
+	font-size: 14px;
+    }
+
+    .subtitle {
+	display: none;
+    }
+}
+
+@media (max-height: 450px) {
+    .title {
+	display: none;
+    }
+
+    .subtitle {
+	display: none;
+    }
+}

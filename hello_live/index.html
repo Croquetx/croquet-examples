@@ -1,0 +1,229 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <title>Croquet: Hello Live</title>
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100%;
+                max-height: 100%;
+                margin: 0;
+                user-select: none;
+            }
+            code {
+                flex: 1;
+                overflow: scroll;
+            }
+            button {
+                height: 50px;
+                font-size: 20px;
+            }
+            #counter {
+                margin: auto;
+                font: 100px sans-serif;
+            }
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/@croquet/croquet@1.1.0-26"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/styles/shades-of-purple.min.css">
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/highlight.min.js"></script>
+        <script type="module">
+            import {CodeJar} from 'https://cdn.jsdelivr.net/npm/codejar@3/codejar.min.js';
+            window.CodeJar = CodeJar;
+        </script>
+    </head>
+    <body>
+        <div id="counter">...</div>
+        <code id="editor" class="language-javascript"></code>
+        <button id="accept">Accept</button>
+        <script>
+// This is an example of a simple live coding environment built with Croquet.
+
+// LiveCode is a "universal" Model that accepts method additions/changes at runtime.
+// The live-coded "setup" method is called after the code is changed,
+// it should be used to initialize subscriptions and future messages.
+// All previous user subscriptions and future messages are being cancelled automatically,
+// and there can be a "teardown" method for cleaning up properties.
+// Since "setup" is being re-run on any code change, it should only initialize properties that are not already set.
+// The live coded methods are persisted to survive changes to this file which create a different session.
+
+class LiveCode extends Croquet.Model {
+    init(_, persisted) {
+        super.init();
+        this.subscribe(this.sessionId, "set-code", this.setCode);
+        if (persisted) this.setCode(persisted.methods);
+    }
+
+    setup() {}
+    teardown() {}
+
+    get methods() {
+        return Object.entries(this)
+            .filter(m => typeof m[1] === "function")
+            .map(m => LiveCode.normalize(m[1], m[0]));
+    }
+
+    setCode(methods) {
+        // shut down everything
+        try { this.teardown(); }
+        catch (error) { this.publish(this.sessionId, "code-error", {in: "teardown", error}); }
+        this.unsubscribeAll();
+        this.cancelFuture("*");
+        // apply edits
+        for (const method of methods) {
+            const name = method.match(/^\w+/)[0];
+            if (method === name) delete this[name];
+            else this[name] = LiveCode.compile(method).fn;
+            this.publish(this.sessionId, "code-changed", name);
+        }
+        // restart everything
+        this.init();
+        try {
+            this.setup();
+            // if successful, persist
+            this.persistSession({ methods: this.methods.map(m => m.source) });
+        } catch (error) {
+            this.publish(this.sessionId, "code-error", {in: "setup", error});
+        }
+    }
+
+    static parse(source) {
+        const [name, params, body] = source.match(/(\w+)\s*\(([^)]*)\)\s*{([\s\S]*)}/).slice(1);
+        return {name, params, body};
+    }
+
+    static compile(code) {
+        const {name, source} = this.normalize(code);
+        const fn = (Function(`return function ${source};`))();
+        return {name, fn};
+    }
+
+    static normalize(fn, nm) {
+        const {name, params, body} = this.parse(fn.toString());
+        const source = `${nm||name}(${params}) {${body}}`;
+        return {name, params, body, source};
+    }
+
+    static types() {
+        return {
+            "Method": {
+                cls: "Function",
+                write: fn => this.normalize(fn).source,
+                read: source => this.compile(source).fn,
+            }
+        };
+    }
+}
+LiveCode.register("LiveCode");
+
+
+// This example code will be loaded if it's a new session
+const EXAMPLE = `
+setup() {
+    this.counter = this.counter || 0;
+    this.subscribe("counter", "set", this.setCounter);
+    this.tick();
+}
+
+setCounter(value) {
+    this.counter = value;
+    this.publish("counter", "changed", this.counter);
+}
+
+tick() {
+    this.setCounter(this.counter + 1);
+    this.future(1000).tick();
+}
+`;
+
+// The view is a simple code editor
+// It also takes care of the counter example UI
+// because that part isn't live coded yet
+
+let editor;
+
+class LiveView extends Croquet.View {
+    constructor(model) {
+        super(model);
+        this.model = model;
+        // Live coding UI
+        if (!editor) {
+            hljs.configure({ ignoreUnescapedHTML: true }); // ¯\_(ツ)_/¯
+            editor = CodeJar(document.getElementById('editor'), hljs.highlightElement);
+        }
+        document.getElementById('editor').onkeydown = (e) => {
+            if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.keyCode == 83) {
+                e.preventDefault();
+                this.acceptCode(editor.toString());
+            }
+        };
+        document.getElementById('accept').onclick = () => {
+            document.getElementById('editor').blur(); // hide keyboard on mobile
+            this.acceptCode(editor.toString());
+        };
+        if (model.methods.length > 0) this.showCode();
+        else this.acceptCode(EXAMPLE);
+        this.subscribe(this.sessionId, { event: "code-changed", handling: "oncePerFrame" }, this.showCode);
+        this.subscribe(this.sessionId, "code-error", this.showError);
+
+        // Example View Code (todo: make live-editable)
+        document.getElementById("counter").onclick = () => this.publish("counter", "set", 0);
+        this.subscribe("counter", "changed", (value) => {
+            document.getElementById("counter").innerHTML = value;
+        });
+    }
+
+    showCode() {
+        const sources = this.model.methods.map(m => m.source);
+        const code = sources.join("\n\n");
+        if (editor.toString().trim() === code) return;
+        let pos; try { pos = editor.save(); } catch (_) {} // ¯\_(ツ)_/¯
+        editor.updateCode(code);
+        if (pos) editor.restore(pos);
+    }
+
+    showError({in: where, error}) {
+        Croquet.App.showMessage(`Error during ${where}():\n${error.message}\n\n${error.stack}`, {level: "error"});
+    }
+
+    acceptCode(code) {
+        try {
+            const compiled = new Function(`return class Model {${code}}`)();
+            const newMethods = Object.fromEntries(
+                Object.entries(Object.getOwnPropertyDescriptors(compiled.prototype))
+                .filter(m => typeof m[1].value === "function" && m[0] !== "constructor")
+                .map(m => [m[0], LiveCode.normalize(m[1].value, m[0])]));
+            const edits = [];
+            const todo = new Set(Object.keys(newMethods));
+            for (const method of this.model.methods) {
+                if (!newMethods[method.name]) {
+                    edits.push(method.name); // delete
+                } else if (newMethods[method.name].source !== method.source) {
+                    edits.push(newMethods[method.name].source);
+                }
+                todo.delete(method.name);
+            }
+            for (const name of todo) {
+                edits.push(newMethods[name].source);
+            }
+            this.publish(this.sessionId, "set-code", edits);
+        } catch (e) {
+            Croquet.App.showMessage(e.message, { level: "warning" });
+        }
+    }
+}
+
+Croquet.App.messages = true;
+Croquet.App.makeWidgetDock();
+
+Croquet.Session.join({
+    apiKey: "1_i65fcn11n7lhrb5n890hs3dhj11hfzfej57pvlrx",
+    appId: "io.croquet.hello-live",
+    model: LiveCode,
+    view: LiveView,
+});
+
+        </script>
+    </body>
+</html>

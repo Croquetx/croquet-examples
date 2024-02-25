@@ -1,0 +1,15 @@
+{
+  "name": "broadcaster",
+  "version": "0.0.1",
+  "description": "broadcaster port for Greenlight",
+  "private": true,
+  "scripts": {
+    "deploy": "node deploy.js"
+  },
+  "devDependencies": {
+    "fs-extra": "^9.0.1",
+    "md5": "^2.3.0",
+    "simple-git": "^2.20.1",
+    "sync-request": "^6.1.0"
+  }
+}

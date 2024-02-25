@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="icon" type="image/png" href="/icon.png">
+        <title>Wide Wide World</title>
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+                font: 12px sans-serif;
+                background: #ccc;
+            }
+            #glcanvas {
+                position: absolute;
+                z-index: 0;
+                left: 0;
+                top: 0;
+            }
+            #uicanvas {
+                position: absolute;
+                z-index: 1;
+                left: 0;
+                top: 0;
+            }
+            #cursorCanvas {
+                position: absolute;
+                z-index: 2;
+                left: 0;
+                top: 0;
+            }
+       </style>
+    </head>
+    <body>
+        <canvas id="glCanvas"></canvas>
+        <canvas id="uiCanvas"></canvas>
+        <canvas id="cursorCanvas"></canvas>
+        <script src="../src/w3.js"></script>
+    </body>
+</html>

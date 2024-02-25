@@ -1,0 +1,17 @@
+{
+  "name": "@croquet/datacenter",
+  "version": "0.0.1",
+  "description": "Microverse Data Center Demo",
+  "private": true,
+  "author": "Croquet Corporation",
+  "license": "Apache-2.0",
+  "scripts": {
+    "deploy": "node deploy.js"
+  },
+  "dependencies": {
+    "fs-extra": "^10.1.0",
+    "glob": "^8.0.3",
+    "replace-in-file": "^6.3.5",
+    "simple-git": "^3.14.1"
+  }
+}

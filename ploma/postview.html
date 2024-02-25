@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@croquet/croquet@1.0.5"></script> -->
+    <script src="./croquet/croquet-latest.min.js"></script>
+    <link id="ploma-css" rel="stylesheet" href="./ploma.css" />
+
+    <script type="module">
+      import {makeMain, Library} from "./croquet-virtual-dom.js";
+      import {ploma} from "./ploma-vdom.js";
+      import {initTexture} from "./ploma.js";
+
+      window._postview = true;
+
+      window.onload = () => {
+	  initTexture().then(() => {
+	      let library = new Library();
+	      library.addLibrary("ploma", ploma);
+	      makeMain("ploma.start", {
+		  tps: 0,
+		  apiKey: "1_s77e6tyzkx5m3yryb9305sqxhkdmz65y69oy5s8e",
+		  appId: "io.croquet.vdom.ploma-postview",
+		  eventRateLimit: 60}, library, null, null, true)();
+	  });
+      };
+    </script>
+  </head>
+  <body>
+    <div id="croquet-root" style="height: 100%"></div>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "@croquet/video",
+  "version": "0.0.2",
+  "description": "",
+  "scripts": {
+    "start": "parcel src/*.html -p 9009"
+  },
+  "author": "",
+  "license": "Apache",
+  "browserslist": {
+    "production": [
+      "> 5%"
+    ],
+    "development": [
+      "last 1 Chrome version",
+      "last 1 Firefox version",
+      "last 1 Safari version",
+      "last 1 iOS major version"
+    ]
+  },
+  "dependencies": {
+    "@croquet/croquet": "file:../libraries/packages/croquet"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0-nightly.776",
+    "parcel-plugin-clean-dist": "0.0.6"
+  }
+}

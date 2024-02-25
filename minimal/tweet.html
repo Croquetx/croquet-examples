@@ -1,0 +1,9 @@
+<div id="c"></div>
+<script src="q.js"></script><script>
+class M extends Q.OModel({n:0}){init(){
+this.on("r",_=>this.n=0)
+this.every(1000,_=>this.n++)}}
+Q.start("M",M).then(({model:m,view:v})=>{
+v.onChanged(m,"n",_=>c.innerText=m.n)
+window.onclick=_=>v.emit("r")})
+</script>
