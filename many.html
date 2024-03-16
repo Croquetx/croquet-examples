@@ -37,14 +37,17 @@
         <div id="overlay"></div>
         <script>
             // example usage
-            // Uses 2D as default.
+            // Uses 2D as default. Generates as many iframes as will fit on the page.
             // http://localhost:8000/many.html
             // Limit to 10 iframes.
             // http://localhost:8000/many.html#10
-            // Use a different Croquet app
+            // Use a different Croquet app - not every Croquet app will work with this.
             // http://localhost:8000/many.html?https://croquet.io/2d?q=many
             // http://localhost:8000/many.html?https://croquet.io/2d/index.html?q=kf2immihzt#10
+            // Using a local app under development.
             // http://localhost:8000/many.html?../hello/hello.html?q=xz#11
+            // Using a local stress test app under development.
+            // http://localhost:8000/many.html?../stress/stress.html?q=xz#11
 
             let connectedFrames = 0;
             let totalUsers = 0;
