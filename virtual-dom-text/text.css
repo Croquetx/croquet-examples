@@ -1,0 +1,99 @@
+body {
+    touch-action: none;
+}
+
+html,body {
+    width: 100%;
+    height: 100%;
+}
+
+.no-select {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+.text-div {
+   font-family: OpenSans;
+   font-size: 16px;
+}
+
+.text[resizable="true"] {
+   width: 100%;
+   height: 100%;
+}
+
+.text-menu-top {
+   display: flex;
+   align-items: center;
+   border: 1px solid black;
+   corner-radius: 2px;
+   background-color: white;
+   box-shadow: 0 3px 6px 0 rgba(0,0,0,0.3), 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.text-menu-holder {
+    opacity: 0.85;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.3);
+    border-radius: 4px 8px 8px 8px;
+    width: fit-content;
+    height: fit-content;
+    overflow: hidden;
+}
+
+.text-menu {
+    display: flex;
+    flex-direction: column;
+    padding-top: 6px;
+    padding-bottom: 2px;
+    background-color: #F2F2F2;
+    border: 0px;
+
+}
+
+.text-menu-item {
+    display: flex;
+    align-items: center;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
+.text-menu-item:hover {
+    background-color: white;
+}
+
+.text-menu-item:hover span {
+    color: #008E94;
+}
+
+.text-menu-item {
+   margin: 2px;
+}
+
+.text-face-button {
+    display: flex;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.text-face-button[buttonState="On"] {
+    color: #00A3AC
+}
+
+.text-face-italic {
+    margin-left: 2px;
+}
+
+.text-face-bold {
+    display: flex;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-left: 4px;
+}
+

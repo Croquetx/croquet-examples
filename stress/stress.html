@@ -1,17 +1,18 @@
 <html>
     <head>
-        <title>Hello World</title>
+        <title>Stress Test</title>
         <style>
             body {
                 display: flex;
-                user-select: none
+                user-select: none;
+                background: #ddd;
             }
             #counter {
                 margin: auto;
                 top:50%;
                 -ms-transform: translateY(-50%);
                 transform: translateY(-50%);
-                font: 100px sans-serif;
+                font: 40px sans-serif;
             }
             button {
                 position: absolute;
@@ -20,12 +21,12 @@
                 bottom: 10px;
             }
         </style>
+        <script src="https://cdn.jsdelivr.net/npm/@croquet/croquet@1.1.0-43"></script>
     </head>
     <body>
         <button id="SessionButton">Loading...</button>
-        <script src="https://cdn.jsdelivr.net/npm/@croquet/croquet@1.1.0-43"></script>
-        <script src="../gomany.js"></script>
         <div id="counter">0</div>
-        <script src="hello.js"></script>
+        <script src="../gomany.js"></script>
+        <script src="stress.js"></script>
     </body>
 </html>

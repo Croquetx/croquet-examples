@@ -36,6 +36,16 @@
     <body>
         <div id="overlay"></div>
         <script>
+            // example usage
+            // Uses 2D as default.
+            // http://localhost:8000/many.html
+            // Limit to 10 iframes.
+            // http://localhost:8000/many.html#10
+            // Use a different Croquet app
+            // http://localhost:8000/many.html?https://croquet.io/2d?q=many
+            // http://localhost:8000/many.html?https://croquet.io/2d/index.html?q=kf2immihzt#10
+            // http://localhost:8000/many.html?../hello/hello.html?q=xz#11
+
             let connectedFrames = 0;
             let totalUsers = 0;
 
@@ -62,11 +72,9 @@
                     document.body.removeChild(iframes.pop());
                     window.onmessage({ data: { connected: -1 } });
                 }
-                const src = window.location.search.slice(1)
-                    || (process.env.NODE_ENV === "development"
-                        ? "2d.html?nodock&nomessages&q=MANY"
-                        : "../2d/?nodock&nomessages&q=MANY");
-                
+                src = window.location.search.slice(1)
+                    || "../2d/2d.html?nodock&nomessages&q=MANY"
+                console.log(src);
                 // add new iFrames 
                 while (iframes.length < n) {
                     const iframe = document.createElement("iframe");

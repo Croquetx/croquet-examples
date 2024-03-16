@@ -1,7 +1,3 @@
-// to use latest client lib: cd croquet/libraries/packages/croquet; npm start
-import { Model, View, App, Session } from "@croquet/croquet";
-
-
 const TPS = "10x3";             // reflector ticks per sec x local multiplier
 const THROTTLE = 1000 / 20;     // mouse event throttling
 const STEP_MS = 1000 / 30;      // bouncing ball step time in ms
@@ -12,7 +8,7 @@ const RECONNECT = +new URL(window.location).searchParams.get("reconnect");
 
 ////// Models /////
 
-class ModelRoot extends Model {
+class ModelRoot extends Croquet.Model {
 
     init() {
         super.init();
@@ -35,7 +31,7 @@ class ModelRoot extends Model {
 }
 ModelRoot.register("ModelRoot");
 
-class Shape extends Model {
+class Shape extends Croquet.Model {
 
     init(options={}) {
         super.init();
@@ -122,7 +118,7 @@ let OFFSETX = 50;               // top-left corner of view, plus half shape widt
 let OFFSETY = 50;               // top-left corner of view, plus half shape height
 
 
-class ShapesView extends View {
+class ShapesView extends Croquet.View {
 
     constructor(model) {
         super(model);
@@ -177,7 +173,7 @@ class ShapesView extends View {
 }
 
 
-class ShapeView extends View {
+class ShapeView extends Croquet.View {
 
     constructor(model) {
         super(model);
@@ -232,13 +228,13 @@ class ShapeView extends View {
 }
 
 
-// tell many.html
+//tell many.html
 //window.top.postMessage({connected: +1}, "*");
 //window.top.postMessage({connected: -1}, "*");
 
 async function go() {
-    App.messages = true;
-    App.makeWidgetDock();
+    Croquet.App.messages = true;
+    Croquet.App.makeWidgetDock();
 
     const SessionButton = document.getElementById("SessionButton");
 
@@ -247,14 +243,21 @@ async function go() {
 
     joinSession();
 
+    function inIframe () {
+        try {
+            return window.self !== window.top;
+        } catch (e) {
+            return true;
+        }
+    }
     async function joinSession() {
         SessionButton.innerText = "Joining";
         SessionButton.onclick = null;
 
-        session = await Session.join({
+        session = await Croquet.Session.join({
             apiKey: "1_i65fcn11n7lhrb5n890hs3dhj11hfzfej57pvlrx",
             appId: "io.croquet.examples.2d",
-            name: App.autoSession(),
+            name: Croquet.App.autoSession(),
             password: "none",
             model: Shapes,
             view: ShapesView,

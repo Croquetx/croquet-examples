@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/@croquet/croquet@1.0.5"></script>
+    <link rel="stylesheet" href="./text.css" />
+    <script type="module">
+      import {makeMain, Library} from "https://cdn.jsdelivr.net/npm/@croquet/virtual-dom@1.0.7";
+
+      import {text} from "./text.js";
+      import {widgets} from "./widgets/widgets.js";
+      import {apiKey} from "./apiKey.js";
+
+      let library = new Library();
+      library.addLibrary("text", text);
+      library.addLibrary("widgets", widgets);
+
+      window._root = ".";
+
+      window.document.addEventListener("wheel", evt => evt.preventDefault(), {
+	  passive: false,
+	  capture: false
+      });
+      window.onload = makeMain("text.beText", {
+	  tps: 0,
+	  apiKey,
+	  appId: "io.croquet.vdom.text"
+      }, library, null, null, true);
+    </script>
+  </head>
+  <body style="touch-action: none">
+    <div id="croquet-root" style="width: 100%; height: 100%"></div>
+  </body>
+</html>

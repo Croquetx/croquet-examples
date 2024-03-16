@@ -34,7 +34,6 @@ class MyModel extends Croquet.Model {
         this.publish("counter", "update", this.counter);
         this.future(1000).tick();
     }
-
 }
 
 // Register our model class with the serializer
@@ -50,9 +49,15 @@ class MyView extends Croquet.View {
 
     constructor(model) { // The view gets a reference to the model when the session starts.
         super(model);
+        this.element = document.createElement("div");
+        this.element.className = "root";
         this.handleUpdate(model.counter); // Get the current count on start up.
         document.addEventListener("click", event => this.onclick(event), false);
         this.subscribe("counter", "update", data => this.handleUpdate(data));
+        if(inIframe()){
+            console.log(document.getElementById("counter"))
+            document.getElementById("counter").style.fontSize=30;
+        }
     }
 
     onclick() {
@@ -63,17 +68,23 @@ class MyView extends Croquet.View {
         document.getElementById("counter").innerHTML = data;
     }
 
+    showStatus(backlog, starvation, min, max) {
+        const color = backlog > starvation ? '255,0,0' : '255,255,255';
+        const value = Math.max(backlog, starvation) - min;
+        const size = Math.min(value, max) * 100 / max;
+        const alpha = size / 100;
+        this.element.style.boxShadow = alpha < 0.2 ? "" : `inset 0 0 ${size}px rgba(${color},${alpha})`;
+    }
 }
 
 //------------------------------------------------------------------------------------------
-// Join the Teatime session and spawn our model and view.
+// Join the Teatime session and spawn our model and view. This uses the manyGo
 //------------------------------------------------------------------------------------------
-
-Croquet.Session.join({
+go({
     apiKey: "1_i65fcn11n7lhrb5n890hs3dhj11hfzfej57pvlrx",
     appId: "io.croquet.hello",
     name: Croquet.App.autoSession(),
-    password: Croquet.App.autoPassword(),
+    password: "none", //Croquet.App.autoPassword(),
     model: MyModel,
     view: MyView,
 });
