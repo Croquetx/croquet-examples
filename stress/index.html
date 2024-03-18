@@ -3,16 +3,12 @@
         <title>Stress Test</title>
         <style>
             body {
-                display: flex;
                 user-select: none;
                 background: #ddd;
             }
-            #counter {
-                margin: auto;
-                top:50%;
-                -ms-transform: translateY(-50%);
-                transform: translateY(-50%);
-                font: 40px sans-serif;
+            div {
+                display: block;
+                font: 16px sans-serif;
             }
             button {
                 position: absolute;
@@ -25,7 +21,8 @@
     </head>
     <body>
         <button id="SessionButton">Loading...</button>
-        <div id="counter">0</div>
+        <div id="counter">E:</div>
+        <div id="latency">L:</div>
         <script src="../gomany.js"></script>
         <script src="stress.js"></script>
     </body>

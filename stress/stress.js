@@ -92,7 +92,7 @@ class MyView extends Croquet.View {
 
         if(inIframe()){
             //console.log(document.getElementById("counter"))
-            document.getElementById("counter").style.fontSize=30;
+            document.getElementById("counter").style.fontSize=16;
         }
 
         this.future(1000).tick(); // start the event generation loop
@@ -150,7 +150,7 @@ class MyView extends Croquet.View {
     // this subscription is called once per second from the model
     handleUpdate(data) {
         this.averageArray[this.index]=data;
-        this.index = (this.index+1)%10;
+        this.index = (this.index+1)%5;
         //average of the averageArray
         let sum = 0;
         for(let i=0;i<this.averageArray.length;i++){
@@ -158,7 +158,9 @@ class MyView extends Croquet.View {
         }
         let average = Math.floor(0.5+sum/this.averageArray.length);
 
-        document.getElementById("counter").innerHTML = average;
+        document.getElementById("counter").innerHTML = 'E: '+average+'/'+this.eventsPerSecond;
+        document.getElementById("latency").innerHTML = 'L: '+this.realm.vm.controller.latency;
+       // this.session.latency
     }
 
     showStatus(backlog, starvation, min, max) {
