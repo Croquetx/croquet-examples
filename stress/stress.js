@@ -25,10 +25,12 @@ class MyModel extends Croquet.Model {
     init() { // Note that models are initialized with "init" instead of "constructor"!
         this.eventsPerSecond = 1; // there is always at least 1 event per second
         this.eventCounter = 0; // how many events occurred in the last second
+        this.displayEvent = true;
         this.subscribe("eventCount", "addEvent", this.addEvent);
         this.subscribe("eventCount", "removeEvent", this.removeEvent);
         this.subscribe("eventCount", "reset", this.resetCounter);
         this.subscribe("eventCount", "event", this.handleEvent);
+        this.subscribe("eventCount", "toggleDisplay", this.toggleDisplay);
         this.future(1000).tick();
     }
 
@@ -51,6 +53,11 @@ class MyModel extends Croquet.Model {
         }
     }
 
+    toggleDisplay(){
+        this.displayEvent = !this.displayEvent;
+        this.publish("eventCount","changeDisplay",this.displayEvent);
+    }
+
     handleEvent() {
         this.eventCounter++;
     }
@@ -68,9 +75,10 @@ class MyModel extends Croquet.Model {
 MyModel.register("MyModel");
 
 //------------------------------------------------------------------------------------------
-// Define our view. MyView listens for click events on the window. If it receives one, it
-// broadcasts a reset event. It also listens for update events from the model. If it receives
-// one, it updates the counter on the screen with the current count.
+// Define our view. MyView auto-generates events based upon number of users and total session
+// events per second. It updates once per second to display the number average number of events
+// received for the last 5 seconds.
+// 
 //------------------------------------------------------------------------------------------
 
 class MyView extends Croquet.View {
@@ -83,12 +91,16 @@ class MyView extends Croquet.View {
         this.averageArray = [0,];
         this.index = 0;
         this.eventCounter = model.eventCounter;
+        this.displayEvent = model.displayEvent;
+
         this.eventsPerSecond = model.eventsPerSecond;
+        this.averageEvents = 5;
         this.handleUpdate(this.eventCounter); // Get the current count on start up.
         this.lastTime = Date.now();
         this.nextEventTime = 1000;
         this.subscribe("eventCount", "change", data => this.handleChange(data));
         this.subscribe("eventCount", "update", data => this.handleUpdate(data));   
+        this.subscribe("eventCount", "changeDisplay", data => this.changeDisplay(data));
 
         if(inIframe()){
             //console.log(document.getElementById("counter"))
@@ -114,14 +126,13 @@ class MyView extends Croquet.View {
                     console.log("reset events");
                     this.publish("eventCount","reset");
                     break;
+                case "e": case "E":
+                    this.publish("eventCount", "toggleDisplay");
+                    break;
 
             }
         }
     }
-
- //   onclick() {
- //       this.publish("counter", "reset");
- //   }
 
     // this is called based on the global event rate and number of users
     tick(){
@@ -132,8 +143,10 @@ class MyView extends Croquet.View {
        //console.log("delta: " +(this.nextEventTime-delta));
         this.nextEventTime = Math.floor(delta+0.5+2*Math.random()*users*1000/this.eventsPerSecond);
         this.publish("eventCount", "event");
-        this.element.style.background = "#dfd";
-        this.future(100).clearBackground();
+        if(this.displayEvent){
+            this.element.style.background = "#dfd";
+            this.future(100).clearBackground();
+        }
         this.future(this.nextEventTime).tick();
     }
 
@@ -141,7 +154,7 @@ class MyView extends Croquet.View {
         this.element.style.background = "#ddd";
     }
 
-    // this is called whenever the eventCounter changes
+    // this is called whenever the session eventsPerSecond changes
     handleChange(data) {
         this.eventsPerSecond = data;
         console.log("events per second: " + this.eventsPerSecond);
@@ -150,7 +163,7 @@ class MyView extends Croquet.View {
     // this subscription is called once per second from the model
     handleUpdate(data) {
         this.averageArray[this.index]=data;
-        this.index = (this.index+1)%5;
+        this.index = (this.index+1)%this.averageEvents;
         //average of the averageArray
         let sum = 0;
         for(let i=0;i<this.averageArray.length;i++){
@@ -161,6 +174,10 @@ class MyView extends Croquet.View {
         document.getElementById("counter").innerHTML = 'E: '+average+'/'+this.eventsPerSecond;
         document.getElementById("latency").innerHTML = 'L: '+this.realm.vm.controller.latency;
        // this.session.latency
+    }
+
+    changeDisplay(data){
+        this.displayEvent = data;
     }
 
     showStatus(backlog, starvation, min, max) {
