@@ -28,7 +28,7 @@ async function go(mySession) {
     async function joinSession(mySession) {
         SessionButton.innerText = "Joining";
         SessionButton.onclick = null;
-//      console.log(mySession);
+//        console.log(mySession);
         session = await Croquet.Session.join(mySession);
         if(inIframe()) window.requestAnimationFrame(frame);
         SessionButton.innerText = "Leave";

@@ -92,6 +92,7 @@ class MyView extends Croquet.View {
         this.index = 0;
         this.eventCounter = model.eventCounter;
         this.displayEvent = model.displayEvent;
+        this.lastBandwidth = 0;
 
         this.eventsPerSecond = model.eventsPerSecond;
         this.averageEvents = 5;
@@ -101,13 +102,8 @@ class MyView extends Croquet.View {
         this.subscribe("eventCount", "change", data => this.handleChange(data));
         this.subscribe("eventCount", "update", data => this.handleUpdate(data));   
         this.subscribe("eventCount", "changeDisplay", data => this.changeDisplay(data));
-
-        if(inIframe()){
-            //console.log(document.getElementById("counter"))
-            document.getElementById("counter").style.fontSize=16;
-        }
-
-        this.future(1000).tick(); // start the event generation loop
+        this.tickCount = 1
+        this.future(1000).tick(this.tickCount); // start the event generation loop
 
         document.onkeydown = (e) => {
             if(e.repeat) return;
@@ -135,7 +131,8 @@ class MyView extends Croquet.View {
     }
 
     // this is called based on the global event rate and number of users
-    tick(){
+    tick(thisTick){
+        if(this.tickCount !== thisTick) return; // we added more users and a different tick is running.
         let users = this.realm.vm.controller.users;
         let nextTime = Date.now();
         let delta = this.nextEventTime-(nextTime-this.lastTime);
@@ -147,7 +144,7 @@ class MyView extends Croquet.View {
             this.element.style.background = "#dfd";
             this.future(100).clearBackground();
         }
-        this.future(this.nextEventTime).tick();
+        this.future(this.nextEventTime).tick(thisTick);
     }
 
     clearBackground(){
@@ -158,10 +155,14 @@ class MyView extends Croquet.View {
     handleChange(data) {
         this.eventsPerSecond = data;
         console.log("events per second: " + this.eventsPerSecond);
+        this.tickCount++;
+        let users = this.realm.vm.controller.users;
+        this.future(Math.floor(0.5+2*Math.random()*users*1000/this.eventsPerSecond)).tick(this.tickCount);
     }
 
     // this subscription is called once per second from the model
     handleUpdate(data) {
+   //     console.log(this.lastBandwidth,CROQUETSTATS.networkTraffic.reflector_in);
         this.averageArray[this.index]=data;
         this.index = (this.index+1)%this.averageEvents;
         //average of the averageArray
@@ -170,9 +171,12 @@ class MyView extends Croquet.View {
             sum+=this.averageArray[i];
         }
         let average = Math.floor(0.5+sum/this.averageArray.length);
-
+        let bandwidth = CROQUETSTATS.networkTraffic.reflector_in;
         document.getElementById("counter").innerHTML = 'E: '+average+'/'+this.eventsPerSecond;
-        document.getElementById("latency").innerHTML = 'L: '+this.realm.vm.controller.latency;
+        document.getElementById("latency").innerHTML = 'L: '+ this.session.latency;
+        let bwk = Math.floor((bandwidth-this.lastBandwidth)/1024);
+        document.getElementById("bandwidth").innerHTML = 'B: '+ bwk +'K';
+        this.lastBandwidth = bandwidth;        
        // this.session.latency
     }
 
