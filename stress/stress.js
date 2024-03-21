@@ -156,8 +156,11 @@ class MyView extends Croquet.View {
         this.eventsPerSecond = data;
         console.log("events per second: " + this.eventsPerSecond);
         this.tickCount++;
+        this.lastTime = Date.now();
+        this.nextEventTime = 1000;
         let users = this.realm.vm.controller.users;
-        this.future(Math.floor(0.5+2*Math.random()*users*1000/this.eventsPerSecond)).tick(this.tickCount);
+        this.nextEventTime = Math.floor(0.5+2*Math.random()*users*1000/this.eventsPerSecond);
+        this.future(this.nextEventTime).tick(this.tickCount);
     }
 
     // this subscription is called once per second from the model
