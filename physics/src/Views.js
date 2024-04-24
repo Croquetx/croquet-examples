@@ -18,7 +18,7 @@ function setGeometryColor(geometry, color) {
 //-- SprayPawn -------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------
 
-class SprayPawn extends mix(Pawn).with(PM_Smoothed, PM_ThreeInstanced) {
+export class SprayPawn extends mix(Pawn).with(PM_Smoothed, PM_ThreeInstanced) {
     constructor(...args) {
         super(...args);
         this.useInstance(this.actor.shape + this.actor.index);
@@ -30,7 +30,7 @@ SprayPawn.register("SprayPawn");
 //-- FountainPawn -------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------
 
-class FountainPawn extends mix(Pawn).with(PM_Spatial, PM_ThreeVisible) {
+export class FountainPawn extends mix(Pawn).with(PM_Spatial, PM_ThreeVisible) {
     constructor(...args) {
         super(...args);
 
@@ -147,6 +147,7 @@ export class MyViewRoot extends ViewRoot {
     constructor(model) {
         super(model);
         this.subscribe("input", " Down", this.doShoot);
+        this.subscribe("input", "tap", this.doShoot);
     }
 
     onStart() {

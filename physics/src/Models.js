@@ -195,8 +195,13 @@ class FountainActor extends mix(Actor).with(AM_Spatial, AM_RapierWorld, AM_Rapie
     }
 
     doShoot(gun) {
+
         const aim = v3_normalize(v3_sub([0,15,0], gun));
-        const shape = "cube";
+        const type = this.random();
+        let shape = "cube";
+        if (type > 0.4) shape = "cylinder";
+        if (type > 0.7) shape = "ball";
+        if (type > 0.9) shape = "cone";
         const index = Math.floor(this.random()*20);
         const translation = v3_add(gun, [0,0,0]);
         const bullet = SprayActor.create({parent: this, shape, index, translation, rigidBodyType: "dynamic"});

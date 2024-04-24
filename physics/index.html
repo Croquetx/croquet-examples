@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Worldcore Physics</title>
@@ -11,23 +12,14 @@
         </style>
         <script type="importmap">
             {
-              "imports": {
-                "@croquet/worldcore": "https://esm.run/@croquet/worldcore@2.0.0-alpha.14",
-                "@dimforge/rapier3d":"https://esm.run/@dimforge/rapier3d@0.11.2",
-                "@croquet/worldcore-rapier":"https://esm.run/@croquet/worldcore-rapier@2.0.0-alpha.14"
-              }
+                "imports": {
+                    "@croquet/worldcore": "https://esm.run/@croquet/worldcore@pre",
+                    "@croquet/worldcore-rapier": "https://esm.run/@croquet/worldcore-rapier@pre"
+                }
             }
         </script>
+        <script type="module" src="index.js"></script>
     </head>
     <body>
-        <script type="module">
-            import "./src/Models.js";
-        </script>
-        <script type="module">
-            import "./src/Views.js";
-        </script>
-        <script type="module">
-            import "./index.js"
-        </script>
     </body>
 </html>
